@@ -3,8 +3,7 @@ import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import java.io.File;
 
-public class MyProgram
-{
+public class Wordle {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         File fileread = new File("words.txt");
