@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import java.io.File;
 
-public class Wordle {
+public class MyProgram
+{
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         File fileread = new File("words.txt");
@@ -24,6 +25,7 @@ public class Wordle {
             }
         } catch (FileNotFoundException e) {
             System.out.println("file could not be read.");
+            return;
         }
         String targetWord = words.get((int)(Math.random() * words.size()));
 
@@ -46,7 +48,7 @@ public class Wordle {
                     System.out.println("'=' when equal and is in the right place, '^' when it exists in the word but isn't in the right place, '*' when it doesn't exist.");
                     for (int j = 0; j < guesses.size(); j++) {
                         System.out.println("\n" + guesses.get(j));
-                        for (int k = 0; k < 5; k++) {
+                        for (int k = j * 5; k < (j * 5) + 5; k++) {
                             System.out.print(confirms.get(k));
                         }
                     }
