@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import java.io.File;
 
@@ -8,37 +9,59 @@ public class Wordle {
         File fileread = new File("words.txt");
         boolean contchar;
         int count;
+        String guess = "seems";
+
         // Load words file into array
-        String[] words = new String[3103];
+        ArrayList<String> words = new ArrayList<>();
+        ArrayList<String> guesses = new ArrayList<>();
+        ArrayList<String> confirms = new ArrayList<>();
         int i = 0;
         try (Scanner myReader = new Scanner(fileread)) {
             while (myReader.hasNextLine()) {
                 System.out.println("Loading words...");
-                words[i] = myReader.nextLine();
+                words.add(myReader.nextLine());
                 i++;
             }
         } catch (FileNotFoundException e) {
             System.out.println("file could not be read.");
         }
-        String targetWord = words[(int)(Math.random() * words.length)];
+        String targetWord = words.get((int)(Math.random() * words.size()));
 
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        clrscreen();
         System.out.println("\nWordle");
         System.out.println("'=' when equal and is in the right place, '^' when it exists in the word but isn't in the right place, '*' when it doesn't exist.");
         for (i = 0; i < 6; i++) {
-            System.out.println();
-            String guess = sc.nextLine();
+            // Only lets the user continue with a valid word from the wordlist.
+            // If an invalid word is inputted, the console is cleared and redrawn and the input loop is ran until a valid word is entered.
+            while (true) {
+                System.out.println();
+                guess = sc.nextLine();
+                if (words.contains(guess)) {
+                    guesses.add(guess);
+                    break;
+                }
+                else {
+                    clrscreen();
+                    System.out.println("\nWordle");
+                    System.out.println("'=' when equal and is in the right place, '^' when it exists in the word but isn't in the right place, '*' when it doesn't exist.");
+                    for (int j = 0; j < guesses.size(); j++) {
+                        System.out.println("\n" + guesses.get(j));
+                        for (int k = 0; k < 5; k++) {
+                            System.out.print(confirms.get(k));
+                        }
+                    }
+                }
+            }
 
             for (int j = 0; j < 5; j++) {
                 count = 0;
                 contchar = false;
                 for (int k = 0; k < 5; k++) {
-                    if (!containstwo(guess, guess.charAt(j)) && guess.charAt(j) == targetWord.charAt(k)) {
+                    if (!containsTwo(guess, guess.charAt(j)) && guess.charAt(j) == targetWord.charAt(k)) {
                         contchar = true;
                         break;
                     }
-                    else if (containstwo(targetWord, guess.charAt(j))) { // If it contains two it takes double the characters for a letter to register, solving the problem of double detection.
+                    else if (containsTwo(targetWord, guess.charAt(j))) { // If it contains two it takes double the characters for a letter to register, solving the problem of double detection.
                         count++;                                         // For example: you have a word "heaps" and the user inputs "seems". The previous code would register both Es as if there are two in the target word, even though there's only one.
                         if (count > 1) {
                             contchar = true;
@@ -52,12 +75,15 @@ public class Wordle {
                     return;
                 }
                 else if (guess.charAt(j) == targetWord.charAt(j)) {
+                    confirms.add("=");
                     System.out.print("=");
                 }
                 else if (contchar) {
+                    confirms.add("^");
                     System.out.print("^");
                 }
                 else {
+                    confirms.add("*");
                     System.out.print("*");
                 }
             }
@@ -67,7 +93,7 @@ public class Wordle {
     }
 
     // Method to check for multiple occurances of letters
-    public static boolean containstwo(String word, Character character) {
+    public static boolean containsTwo(String word, Character character) {
         int count = 0;
         for (int i = 0; i < word.length(); i++) {
             for (int k = 0; k < word.length(); k++) {
@@ -75,5 +101,10 @@ public class Wordle {
             }
         }
         return count > 1;
+    }
+
+    public static void clrscreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 }
