@@ -1,5 +1,7 @@
 @echo off
 echo Compiling...
 javac Wordle.java
-echo Running...
-java Wordle
+IF %ERRORLEVEL% EQU 0 (
+    echo Running...
+    java Wordle
+)
