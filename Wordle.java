@@ -18,13 +18,13 @@ public class Wordle {
                 i++;
             }
         } catch (FileNotFoundException e) {
-            System.out.println("file could not be read.");
+            System.out.println(e);
             return;
         }
         String targetWord = words.get((int)(Math.random() * words.size()));
 
         clrscreen();
-        System.out.println("\n Wordle");
+        System.out.println("\nWordle");
         for (i = 0; i < 6; i++) {
             while (true) {
                 System.out.println();
